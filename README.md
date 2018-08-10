@@ -1,22 +1,27 @@
 # Memory Game Project
 
-URL: https://arcticpilots.github.io/Memory-Game/
+Memory game or _concentration_ is a game where you have to match two cards with the same symbol until all sixteen cards of the deck are matched. Then your score will be displayed with the time of completion.
 
 ## Table of Contents
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+* How to play
+* Additional notes
 
-## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## How to play
 
-To get started, open `js/app.js` and start building out the app's functionality
+In order to play click [here](https://arcticpilots.github.io/Memory-Game/)
+##### And Have Fun !
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+## Additional notes
 
-## Contributing
+This project was built with HTML and CSS and it's fonctionalities used the following
+* [JavaScript](https://fr.wikipedia.org/wiki/JavaScript)
+* [JQuery](https://code.jquery.com/jquery-3.3.1.min.js)
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+and was styled using : 
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+* [Font-Awesome](https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css) for the icons
+* [Google Fonts](https://fonts.googleapis.com/css?family=Coda)
+
+                
