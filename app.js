@@ -7,13 +7,18 @@ let moves = 0;
 let counter = document.querySelector('.moves');
 const deck = document.querySelector('.deck');
 let nbOfStars = 3 ;
-
+let matchedCards = document.querySelectorAll('.match');
+let matchedCardCount =0 ;
 
 let sec = 0, min = 0;
 const timer = document.querySelector('.timer');
 let interval;
 
 const stars = document.querySelectorAll(".stars");
+
+let modal =  document.querySelector('.modal');
+const closeBtn = document.querySelector(".close");
+const replayBtn = document.querySelector('.replay');
 
 /*
  * Display the cards on the page
@@ -46,7 +51,7 @@ function randomize(){
     });
 }
 
-document.addEventListener('DOMContentLoaded', startGame());
+document.addEventListener('DOMContentLoaded', startGame);
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -54,8 +59,7 @@ document.addEventListener('DOMContentLoaded', startGame());
 
 //Check if all cards are matched return true if they are
 function allmatched(){
-  const matchedCards = document.querySelectorAll('.match');
-  if(matchedCards.length === 16) return true ;
+  if(matchedCardCount === 16) return true ;
   return false ;
 }
 
@@ -64,7 +68,7 @@ $('.deck').on('click', '.card', function () {
     $(this).addClass('open');
     $(this).addClass('show');
     openCards.push(this);
-    $(this).css("pointer-events","none");
+    $(this).addClass('disabled');
 
     if (openCards.length === 2) {
         incrementCounter();
@@ -79,16 +83,28 @@ $('.deck').on('click', '.card', function () {
         }
         else {
             unmatched();
-            openCards[0].style.pointerEvents = "auto";
-            openCards[1].style.pointerEvents = "auto";
         }
-    }
-    else {
-      incrementCounter();
     }
 });
 
 $('.restart').on('click',startGame);
+
+//disable cards temporarily by adding diasabled class
+function disable(){
+  cards.forEach(function(card){
+    card.classList.add('disabled');
+  });
+}
+
+//enable the cards by removing disabled class
+function enable(){
+  cards.forEach(function(card){
+      card.classList.remove('disabled');
+  });
+  for(let i=0 ; i<matchedCards.length ; i++){
+    matchedCards[i].classList.add('disabled');
+  }
+}
 
 //when two cards match add "match" class and remove other classes
 function matched() {
@@ -97,16 +113,19 @@ function matched() {
     openCards[0].classList.remove("show", "open");
     openCards[1].classList.remove("show", "open");
     openCards = [];
+    matchedCardCount += 2;
 }
 
 //when cards don't match remove "match" class and keep them open for 1 sec
 function unmatched() {
     openCards[0].classList.remove("match");
     openCards[1].classList.remove("match");
+    disable();
     setTimeout(function () {
-        openCards[0].classList.remove("show", "open", "unmatched");
-        openCards[1].classList.remove("show", "open", "unmatched");
+        openCards[0].classList.remove("show", "open");
+        openCards[1].classList.remove("show", "open");
         openCards = [];
+        enable();
     }, 1000);
 }
 
@@ -147,16 +166,15 @@ function incrementCounter() {
         startTimer();
     }
     // setting rates based on moves
-    if(moves>0 && moves <=19){
-      stars.innerHTML =  '<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li>' ;
+    if(moves>0 && moves <=10){
+      stars[1].innerHTML =  '<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li>' ;
     }
-    else if(moves>20 && moves<=28){
-      nbOfStars = 2;
-      stars.innerHTML = '	<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li>' ;
+    else if(moves>11 && moves<=18){
+      stars[1].innerHTML = '	<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li>' ;
     }
-    else if(moves>30){
+    else if(moves >= 19){
       nbOfStars = 1;
-      stars.innerHTML = '	<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li>' ;
+      stars[1].innerHTML = '	<li><i class="fa fa-star"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li> <li><i class="fa fa-star-o" aria-hidden="true"></i></li>' ;
     }
 }
 
@@ -170,18 +188,11 @@ function startGame() {
     counter.innerHTML = moves;
 
     // reset star rating
-    stars[0].innerHTML = '<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>';
+    stars[1].innerHTML = '<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>';
     //reset timer
     timer.innerHTML = "00:00" ;
-    cards.forEach(function(card){
-      card.style.pointerEvents = "auto";
-    })
     clearInterval(interval);
 }
-
-let modal =  document.querySelector('.modal');
-const closeBtn = document.querySelector(".close");
-const replayBtn = document.querySelector('.replay');
 
 // display the score when all cards match, show modal and moves, time and stars rating + replay button
 function displayScore() {
@@ -190,11 +201,11 @@ function displayScore() {
     // show modal
      $('.container').css({"position" : "absolute" , "z-index" : "-1"});
      modal.style.display = 'block' ;
-     var starRating = stars[0].innerHTML;
+     modal.style.position = 'fixed' ;
 
     //show moves, rating, time elapsed on modal
     document.querySelector(".score").textContent = moves;
-    document.querySelector(".rating").innerHTML = starRating;
+    stars[0].innerHTML = stars[1].innerHTML;
     document.querySelector(".timeElapsed").innerHTML = finalTime;
 
     //add event listener for closing modal and replay button
@@ -212,7 +223,7 @@ function closeModal() {
     });
 }
 
-//restore default parameters when replay button is clicked 
+//restore default parameters when replay button is clicked
 function playAgain() {
     replayBtn.addEventListener('click' , function(){
         modal.style.display = "none";
